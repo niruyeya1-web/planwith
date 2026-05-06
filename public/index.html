@@ -302,7 +302,7 @@ input::placeholder,textarea::placeholder{color:var(--muted)}
     <div id="c-days-config"></div>
     <div class="err-msg" id="c-err">Bitte Namen, Titel und mindestens einen Termin mit Uhrzeit angeben.</div>
   </div>
-  <button class="btn btn-lime" onclick="createEvent()">🔗 Event erstellen &amp; Link teilen</button>
+  <button class="btn btn-lime" onclick="saveNewEvent()">🔗 Event erstellen &amp; Link teilen</button>
 </div>
 
 <!-- ══════ BOOK ══════ -->
@@ -683,7 +683,7 @@ function renderDaysConfig(){
 }
 function removeTime(iso,t){const p=cPicked.find(p=>p.iso===iso);if(p){p.times=p.times.filter(x=>x!==t);renderDaysConfig()}}
 
-function createEvent(){
+function saveNewEvent(){
   const name=document.getElementById('c-name').value.trim();
   const emoji=document.getElementById('c-emoji').value.trim()||'🙂';
   const title=document.getElementById('c-title').value.trim();
