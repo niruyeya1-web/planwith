@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>planwith. 🫶</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F5F0;--white:#FFFFFF;--ink:#141210;--ink2:#3C3A36;
+  --muted:#928F89;--border:#E4E0D8;--bd2:#CCC8BE;
+  --lime:#C8F04A;--lime-dk:#A8CC2A;--lime-lt:#F2FBCF;--lime-md:#DDFB88;
+  --coral:#FF5533;--coral-lt:#FFF0EC;
+  --violet:#7C5CFC;--violet-lt:#EEE9FF;
+  --teal:#00C4A0;--teal-lt:#E0FBF5;
+  --google:#4285F4;--apple:#1C1C1E;--outlook:#0078D4;
+  --r:14px;--sh-sm:0 1px 2px rgba(0,0,0,.05)
+}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+.view{display:none}.view.active{display:block;animation:up .28s ease}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.bar{background:var(--ink);padding:15px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.brand{font-family:'Familjen Grotesk',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:-.03em}
+.brand .dot{color:var(--lime)}
+.bar-right{font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;transition:color .15s}
+.bar-right:hover{color:#fff}
+main{flex:1;max-width:560px;width:100%;margin:0 auto;padding:28px 18px 80px}
+.hero{margin-bottom:28px}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.hero-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
+.hero h1{font-family:'Familjen Grotesk',sans-serif;font-size:clamp(30px,6vw,46px);font-weight:700;letter-spacing:-.04em;line-height:1.08;margin-bottom:10px}
+.hero h1 .hi{position:relative;display:inline-block}
+.hero h1 .hi::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:3px;background:var(--lime);border-radius:2px}
+.hero p{font-size:14px;color:var(--muted);line-height:1.75;max-width:380px}
+.steps{display:flex;align-items:center;gap:0;margin-bottom:24px}
+.step-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.step-item.on{color:var(--ink)}.step-item.done{color:var(--teal)}
+.step-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;transition:all .2s}
+.step-item.on .step-dot{background:var(--ink);border-color:var(--ink);color:#fff}
+.step-item.done .step-dot{background:var(--teal);border-color:var(--teal);color:#fff;font-size:12px}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 8px}
+.step-line.done{background:var(--teal)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px;box-shadow:var(--sh-sm)}
+.card-title{font-family:'Familjen Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.field{margin-bottom:12px}.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+input[type=text],input[type=email],input[type=password],textarea,select{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(20,18,16,.06);background:var(--white)}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:none;border-radius:9px;font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn-ink{background:var(--ink);color:#fff;padding:13px 20px;width:100%}
+.btn-ink:hover{background:var(--ink2);transform:translateY(-1px)}
+.btn-lime{background:var(--lime);color:var(--ink);padding:13px 20px;width:100%}
+.btn-lime:hover{background:var(--lime-dk)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--ink2);padding:9px 14px;font-size:13px}
+.btn-ghost:hover{border-color:var(--bd2)}
+.btn-sm{padding:7px 12px;font-size:12px}
+.btn-teal{background:var(--teal);color:#fff;padding:13px 20px;width:100%}
+.btn-teal:hover{background:#00A888}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-header h3{font-family:'Familjen Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.cal-arr{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--ink);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-arr:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cal-arr:disabled{opacity:.25;pointer-events:none}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:10px}
+.cg-h{text-align:center;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.cc{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all .15s;position:relative;user-select:none}
+.cc.empty,.cc.past{cursor:default;opacity:.35}
+.cc:not(.empty):not(.past):hover{background:var(--lime-lt);border-color:var(--lime-md)}
+.cc.picked{background:var(--lime);border-color:var(--lime-dk);font-weight:700}
+.cc.today::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--coral);position:absolute;bottom:3px}
+.cc.picked.today::after{background:var(--ink)}
+.slot-times{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.slot-time-chip{display:inline-flex;align-items:center;gap:5px;background:var(--lime-lt);border:1px solid var(--lime-md);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;color:var(--ink)}
+.slot-time-chip button{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;line-height:1;padding:0}
+.slot-time-chip button:hover{color:var(--coral)}
+.add-time-row{display:flex;gap:8px;margin-top:10px}
+.add-time-row input[type=time]{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--white);outline:none;color-scheme:light;transition:border-color .15s}
+.add-time-row input[type=time]:focus{border-color:var(--ink)}
+.act-row{display:flex;flex-direction:column;gap:9px}
+.act-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.act-wrap{position:relative}
+.act-wrap select{padding:10px 34px 10px 38px;background:var(--bg)}
+.act-wrap select.chosen{background:var(--white);border-color:var(--lime-dk)}
+.act-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.act-chev{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--muted);pointer-events:none}
+.host-banner{display:flex;align-items:center;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:16px}
+.hb-av{width:48px;height:48px;border-radius:50%;background:var(--lime-lt);border:2px solid var(--lime-md);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.hb-info .hb-name{font-family:'Familjen Grotesk',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.02em}
+.hb-info .hb-sub{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.act-chips-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ach{border-radius:999px;padding:4px 11px;font-size:12px;font-weight:500;border:1px solid transparent}
+.ach-food{background:var(--coral-lt);color:var(--coral);border-color:#FFD0C5}
+.ach-sport{background:var(--teal-lt);color:var(--teal);border-color:#B0EDE4}
+.ach-trip{background:var(--violet-lt);color:var(--violet);border-color:#D8CEFF}
+.section-head{font-family:'Familjen Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border)}
+.day-tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.dtab{flex-shrink:0;border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;background:var(--white);cursor:pointer;text-align:center;transition:all .15s}
+.dtab:hover{border-color:var(--bd2)}
+.dtab.on{background:var(--ink);border-color:var(--ink)}
+.dtab .dt-wd{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.dtab.on .dt-wd{color:rgba(255,255,255,.5)}
+.dtab .dt-day{font-family:'Familjen Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--ink);line-height:1}
+.dtab.on .dt-day{color:#fff}
+.dtab .dt-mon{font-size:9px;color:var(--muted);margin-top:1px}
+.dtab.on .dt-mon{color:rgba(255,255,255,.5)}
+.time-slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.tslot{border:1.5px solid var(--border);border-radius:9px;background:var(--white);padding:10px 8px;font-family:'Familjen Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;text-align:center;transition:all .15s}
+.tslot:hover{border-color:var(--bd2);color:var(--ink)}
+.tslot.sel{background:var(--ink);border-color:var(--ink);color:#fff}
+.tslot.taken{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.tslot.taken:hover{border-color:var(--border);color:var(--ink2)}
+.no-slots{text-align:center;padding:24px 0;font-size:13px;color:var(--muted)}
+.recap-bar{background:var(--lime-lt);border:1.5px solid var(--lime-md);border-radius:10px;padding:12px 15px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink2)}
+.recap-icon{font-size:20px;flex-shrink:0}
+.recap-info .r-date{font-weight:700;color:var(--ink)}
+.recap-info .r-time{font-size:12px;color:var(--lime-dk);margin-top:2px;font-weight:600}
+.act-vote-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.av-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);cursor:pointer;transition:all .15s}
+.av-opt:hover{border-color:var(--bd2)}
+.av-opt.voted{border-color:var(--lime-dk);background:var(--lime-lt)}
+.av-opt-icon{font-size:22px;flex-shrink:0}
+.av-opt-label{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
+.av-opt-bar-wrap{width:60px;flex-shrink:0}
+.av-opt-bar-track{height:4px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:3px}
+.av-opt-bar-fill{height:100%;background:var(--lime);border-radius:999px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+.av-opt-count{font-size:10px;color:var(--muted);text-align:right}
+.av-chk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);flex-shrink:0;transition:all .15s}
+.av-opt.voted .av-chk{background:var(--lime);border-color:var(--lime-dk);color:var(--ink)}
+.vote-section-note{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+.dash-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.dash-title{font-family:'Familjen Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.booking-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border)}
+.booking-item:last-child{border-bottom:none}
+.bi-av{width:30px;height:30px;border-radius:50%;font-size:11px;font-weight:700;font-family:'Familjen Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bi-info{flex:1;min-width:0}
+.bi-name{font-size:13px;font-weight:600;color:var(--ink)}
+.bi-slot{font-size:11px;color:var(--muted);margin-top:1px}
+.bi-badge{font-size:10px;background:var(--lime-lt);color:var(--lime-dk);border:1px solid var(--lime-md);border-radius:999px;padding:3px 8px;font-weight:600;white-space:nowrap}
+.empty-dash{text-align:center;padding:28px 0;font-size:13px;color:var(--muted)}
+.empty-dash .e{font-size:36px;display:block;margin-bottom:8px}
+.share-card{background:var(--ink);border-radius:var(--r);padding:15px 18px;margin-bottom:12px}
+.share-card h3{font-family:'Familjen Grotesk',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.share-row{display:flex;gap:8px}
+.share-row input{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 12px;font-family:'Instrument Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.65);outline:none;min-width:0}
+
+/* ── SUCCESS SCREEN ── */
+.success-wrap{text-align:center;padding:20px 0 36px}
+.s-emoji{font-size:60px;display:block;margin-bottom:16px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.s-wrap h2{font-family:'Familjen Grotesk',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.03em;margin-bottom:8px}
+.s-wrap p{font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 22px}
+.s-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;text-align:left;margin-bottom:18px;box-shadow:var(--sh-sm)}
+.s-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.s-row:last-child{border-bottom:none}
+.s-icon{font-size:16px;flex-shrink:0}
+.s-key{color:var(--muted);min-width:70px}
+.s-val{font-weight:600;color:var(--ink)}
+
+/* ── CALENDAR INTEGRATION SECTION ── */
+.cal-section{margin-bottom:18px}
+.cal-section-title{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.cal-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Calendar option cards */
+.cal-options{display:flex;flex-direction:column;gap:10px}
+.cal-opt{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--white);transition:border-color .2s}
+
+/* Option header — always visible */
+.cal-opt-header{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background .15s}
+.cal-opt-header:hover{background:var(--bg)}
+.cal-opt-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cal-opt-google  .cal-opt-icon{background:#F0F4FF}
+.cal-opt-apple   .cal-opt-icon{background:#1C1C1E}
+.cal-opt-outlook .cal-opt-icon{background:#EBF4FF}
+.cal-opt-ics     .cal-opt-icon{background:var(--lime-lt)}
+.cal-opt-label{flex:1}
+.cal-opt-label .col-name{font-family:'Familjen Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--ink)}
+.cal-opt-label .col-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.cal-opt-caret{font-size:11px;color:var(--muted);transition:transform .2s}
+.cal-opt.open .cal-opt-caret{transform:rotate(90deg)}
+.cal-opt.open{border-color:var(--bd2)}
+.cal-opt-google.open{border-color:var(--google)}
+.cal-opt-apple.open{border-color:#555}
+.cal-opt-outlook.open{border-color:var(--outlook)}
+.cal-opt-ics.open{border-color:var(--lime-dk)}
+
+/* Option body — expand/collapse */
+.cal-opt-body{display:none;padding:0 16px 14px;border-top:1px solid var(--border)}
+.cal-opt.open .cal-opt-body{display:block}
+
+/* Google: single button */
+.google-btn{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--google);border:none;border-radius:9px;width:100%;cursor:pointer;font-family:'Familjen Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-top:12px;transition:all .15s;text-decoration:none;justify-content:center}
+.google-btn:hover{background:#3570DA;transform:translateY(-1px)}
+.google-btn svg{flex-shrink:0}
+
+/* Apple: password form */
+.apple-info{background:#F8F8F8;border-radius:8px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px}
+.apple-info a{color:var(--ink);font-weight:600}
+.apple-form{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.apple-form input{font-size:13px;padding:9px 12px}
+.apple-submit{background:var(--apple);color:#fff;border:none;border-radius:9px;padding:11px;width:100%;font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
+.apple-submit:hover{background:#333}
+.apple-submit.loading{opacity:.5;pointer-events:none}
+
+/* Outlook: direct button */
+.outlook-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 16px;background:var(--outlook);border:none;border-radius:9px;width:100%;cursor:pointer;font-family:'Familjen Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-top:12px;transition:all .15s;text-decoration:none}
+.outlook-btn:hover{background:#0062AB;transform:translateY(-1px)}
+
+/* ICS: download */
+.ics-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 16px;background:var(--lime);border:none;border-radius:9px;width:100%;cursor:pointer;font-family:'Familjen Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-top:12px;transition:all .15s}
+.ics-btn:hover{background:var(--lime-dk)}
+
+/* Status badges */
+.cal-status{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px}
+.cal-status.ok{background:var(--teal-lt);color:var(--teal)}
+.cal-status.err{background:var(--coral-lt);color:var(--coral)}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);color:#fff;font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:13px;padding:10px 20px;border-radius:999px;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.err-msg{font-size:12px;color:var(--coral);margin-top:7px;display:none}
+.ac0{background:#FEE2CC;color:#B84500}.ac1{background:#DCF5E4;color:#166839}
+.ac2{background:#DCEEFF;color:#1A4FA0}.ac3{background:#F5DCFF;color:#7A1AB0}
+.ac4{background:#FFF3CC;color:#906600}.ac5{background:#FFE0E0;color:#C41A1A}
+.ac6{background:#E0F5FF;color:#006680}.ac7{background:#E8FFD8;color:#3A6600}
+@media(max-width:500px){main{padding:20px 14px 60px}.row2{grid-template-columns:1fr}.time-slots-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">planwith<span class="dot">.</span></div>
+  <div class="bar-right" id="bar-right"></div>
+</header>
+
+<main>
+
+<!-- ══════ CREATE ══════ -->
+<div class="view active" id="view-create">
+  <div class="hero">
+    <div class="hero-eyebrow">Für den Host</div>
+    <h1>Plane etwas mit<br>deinen <span class="hi">Freunden.</span></h1>
+    <p>Lege deine freien Zeiten fest — Freunde buchen sich einen Slot, stimmen ab was ihr macht, und bekommen den Termin direkt in ihren Kalender.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">👤 Wer bist du?</div>
+    <div class="row2">
+      <div class="field"><label>Dein Name *</label><input type="text" id="c-name" placeholder="z.B. Lukas" maxlength="30"></div>
+      <div class="field"><label>Emoji</label><input type="text" id="c-emoji" value="🙂" maxlength="3"></div>
+    </div>
+    <div class="field"><label>Anlass / Titel *</label><input type="text" id="c-title" placeholder="z.B. Spieleabend, Wochenendtrip, Grillen…" maxlength="60"></div>
+    <div class="field"><label>Beschreibung</label><input type="text" id="c-desc" placeholder="z.B. Bei mir, BYOB 🍺" maxlength="100"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎯 Aktivitätsoptionen zur Abstimmung</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Freunde stimmen beim Buchen ab was ihr macht 🗳️</p>
+    <div class="act-row">
+      <div><span class="act-lbl">🍽️ Essen &amp; Trinken</span>
+        <div class="act-wrap"><span class="act-icon">🍽️</span>
+          <select id="h-food" onchange="this.classList.toggle('chosen',!!this.value)">
+            <option value="">— keine Option —</option>
+            <option>🍕 Pizza</option><option>🍣 Sushi</option><option>🍔 Burger</option>
+            <option>🥗 Veggie / Salat</option><option>🍜 Asiatisch</option><option>🥩 Steakhouse</option>
+            <option>🧆 Döner / Street Food</option><option>☕ Café / Kaffee</option>
+            <option>🍺 Bar / Bier</option><option>🍹 Cocktails</option><option>🥂 Wein</option><option>🔥 Grillen / BBQ</option>
+          </select><span class="act-chev">▾</span></div></div>
+      <div><span class="act-lbl">🏃 Sport &amp; Aktivität</span>
+        <div class="act-wrap"><span class="act-icon">🏃</span>
+          <select id="h-sport" onchange="this.classList.toggle('chosen',!!this.value)">
+            <option value="">— keine Option —</option>
+            <option>🏋️ Gym / Fitness</option><option>⚽ Fußball</option><option>🎾 Tennis / Padel</option>
+            <option>🧘 Yoga</option><option>🏊 Schwimmen</option><option>🚴 Fahrrad fahren</option>
+            <option>🥾 Wandern</option><option>🎳 Bowling</option><option>🧗 Klettern</option>
+            <option>🎮 Gaming / Zocken</option><option>🏸 Badminton</option>
+          </select><span class="act-chev">▾</span></div></div>
+      <div><span class="act-lbl">✈️ Ausflug &amp; Erlebnis</span>
+        <div class="act-wrap"><span class="act-icon">✈️</span>
+          <select id="h-trip" onchange="this.classList.toggle('chosen',!!this.value)">
+            <option value="">— keine Option —</option>
+            <option>✈️ Kurztrip / Reisen</option><option>🏖️ Strand / See</option>
+            <option>🎡 Freizeitpark</option><option>🎭 Kino / Theater</option>
+            <option>🎵 Konzert / Festival</option><option>🏛️ Museum</option>
+            <option>🛍️ Shopping</option><option>🎲 Spieleabend</option>
+            <option>🎯 Dart / Billard</option><option>🧖 Wellness / Spa</option><option>🌳 Spaziergang / Park</option>
+          </select><span class="act-chev">▾</span></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📅 Deine verfügbaren Slots</div>
+    <div class="cal-header">
+      <button class="cal-arr" id="c-prev" onclick="shiftCal(-1)">‹</button>
+      <h3 id="c-cal-lbl"></h3>
+      <button class="cal-arr" id="c-next" onclick="shiftCal(1)">›</button>
+    </div>
+    <div class="cg" id="c-cg"></div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:12px">Klicke auf Tage um sie hinzuzufügen 👆</p>
+    <div id="c-days-config"></div>
+    <div class="err-msg" id="c-err">Bitte Namen, Titel und mindestens einen Termin mit Uhrzeit angeben.</div>
+  </div>
+  <button class="btn btn-lime" onclick="createEvent()">🔗 Event erstellen &amp; Link teilen</button>
+</div>
+
+<!-- ══════ BOOK ══════ -->
+<div class="view" id="view-book">
+  <div class="host-banner">
+    <div class="hb-av" id="b-av">🙂</div>
+    <div class="hb-info">
+      <div class="hb-name" id="b-hname"></div>
+      <div class="hb-sub" id="b-desc"></div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step-item on" id="si1"><div class="step-dot">1</div><span>Slot wählen</span></div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-item" id="si2"><div class="step-dot">2</div><span>Abstimmen</span></div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-item" id="si3"><div class="step-dot">3</div><span>Bestätigen</span></div>
+  </div>
+  <div id="b-step1">
+    <div class="card">
+      <div class="card-title">⏰ Wähle deinen Slot</div>
+      <div class="day-tabs" id="b-day-tabs"></div>
+      <div class="time-slots-grid" id="b-time-grid"></div>
+    </div>
+  </div>
+  <div id="b-step2" style="display:none">
+    <div class="card">
+      <div class="card-title">🗳️ Was soll's werden?</div>
+      <p class="vote-section-note">Slot: <strong id="v-slot-recap"></strong><br>Stimme ab — alle sehen's live im Dashboard.</p>
+      <div class="act-vote-grid" id="b-act-grid"></div>
+      <button class="btn btn-ghost btn-sm" onclick="bStep(1)" style="margin-bottom:12px">← zurück</button>
+    </div>
+  </div>
+  <div id="b-step3" style="display:none">
+    <div class="card">
+      <div class="card-title">✍️ Fast fertig!</div>
+      <div class="recap-bar">
+        <div class="recap-icon">📅</div>
+        <div class="recap-info">
+          <div class="r-date" id="rc-date"></div>
+          <div class="r-time" id="rc-time"></div>
+        </div>
+      </div>
+      <div id="rc-act-preview" style="margin-bottom:14px;display:none">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Dein Votum</div>
+        <div class="act-chips-row" id="rc-act-chips"></div>
+      </div>
+      <div class="field"><label>Dein Name *</label><input type="text" id="b-gname" placeholder="Wie heißt du?" maxlength="30"></div>
+      <div class="field"><label>Nachricht (optional)</label><input type="text" id="b-gmsg" placeholder="z.B. Ich bring was mit! 🍕" maxlength="100"></div>
+      <div class="err-msg" id="b-err">Bitte deinen Namen eingeben 😊</div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-ghost" onclick="bStep(2)" style="flex:0 0 auto;padding:12px 16px">← zurück</button>
+        <button class="btn btn-teal" style="flex:1" onclick="confirmBook()">Slot bestätigen ✓</button>
+      </div>
+    </div>
+  </div>
+  <div class="dash-card" id="b-dash-wrap" style="margin-top:4px">
+    <div class="dash-title">👥 Wer hat schon gebucht?</div>
+    <div id="b-dash-list"></div>
+  </div>
+  <div class="dash-card" id="b-actvote-dash">
+    <div class="dash-title">🏆 Abstimmung: Was machen wir?</div>
+    <div id="b-actvote-results"></div>
+  </div>
+  <div class="share-card">
+    <h3>🔗 Link teilen</h3>
+    <div class="share-row">
+      <input type="text" id="b-share-url" readonly>
+      <button class="btn btn-ghost btn-sm" onclick="copyLink()" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.14);color:#fff;white-space:nowrap">Kopieren</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:6px">
+    <button class="btn btn-ghost btn-sm" onclick="goCreate()" style="font-size:11px;color:var(--muted)">← Neues Event erstellen</button>
+  </div>
+</div>
+
+<!-- ══════ SUCCESS ══════ -->
+<div class="view" id="view-success">
+  <div class="success-wrap s-wrap">
+    <span class="s-emoji">🎉</span>
+    <h2>Slot gebucht!</h2>
+    <p>Alles klar — füge den Termin jetzt direkt zu deinem Kalender hinzu.</p>
+    <div class="s-card" id="s-summary"></div>
+
+    <!-- ── CALENDAR INTEGRATION ── -->
+    <div class="cal-section">
+      <div class="cal-section-title">📅 Zum Kalender hinzufügen</div>
+      <div class="cal-options">
+
+        <!-- Google Calendar -->
+        <div class="cal-opt cal-opt-google" id="opt-google">
+          <div class="cal-opt-header" onclick="toggleOpt('opt-google')">
+            <div class="cal-opt-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path fill="#fff" d="M12 6.5c1.5 0 2.7.6 3.6 1.5l2.7-2.7C16.6 3.5 14.4 2.5 12 2.5 8.2 2.5 5 4.9 3.7 8.3l3.1 2.4C7.5 8.2 9.5 6.5 12 6.5z"/><path fill="#34A853" d="M21.5 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.3c-.2 1.2-.9 2.2-2 2.8l3.1 2.4c1.8-1.7 2.9-4.1 3.1-7z"/><path fill="#FBBC04" d="M6.8 14.3l-3.1-2.4C3.3 13 3 14.5 3 16c0 1.5.3 3 .9 4.3l3.1-2.4c-.3-.8-.5-1.6-.5-2.4 0-.4.1-.8.3-1.2z"/><path fill="#EA4335" d="M12 21.5c2.4 0 4.5-.8 6-2.2l-3.1-2.4c-.8.5-1.8.8-2.9.8-2.5 0-4.5-1.7-5.2-4l-3.1 2.4C5 19.1 8.2 21.5 12 21.5z"/></svg>
+            </div>
+            <div class="cal-opt-label">
+              <div class="col-name">Google Kalender</div>
+              <div class="col-sub">OAuth — echter Auto-Sync 🔄</div>
+            </div>
+            <span class="cal-opt-caret">›</span>
+          </div>
+          <div class="cal-opt-body">
+            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px">Du wirst kurz zu Google weitergeleitet um dich einzuloggen — danach erscheint der Termin <strong>direkt in deinem Google Kalender</strong>.</p>
+            <a class="google-btn" id="google-oauth-btn" href="#" onclick="startGoogleOAuth();return false;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+              Mit Google anmelden &amp; Termin speichern
+            </a>
+            <div class="cal-status ok" id="google-status-ok" style="display:none">✓ Termin wurde in deinen Google Kalender eingetragen!</div>
+            <div class="cal-status err" id="google-status-err" style="display:none"></div>
+          </div>
+        </div>
+
+        <!-- Apple Calendar -->
+        <div class="cal-opt cal-opt-apple" id="opt-apple">
+          <div class="cal-opt-header" onclick="toggleOpt('opt-apple')">
+            <div class="cal-opt-icon">🍎</div>
+            <div class="cal-opt-label">
+              <div class="col-name">Apple Kalender</div>
+              <div class="col-sub">CalDAV — iCloud Sync 🔄</div>
+            </div>
+            <span class="cal-opt-caret">›</span>
+          </div>
+          <div class="cal-opt-body">
+            <div class="apple-info">
+              Apple nutzt CalDAV mit einem <strong>App-spezifischen Passwort</strong>.<br>
+              Dein reguläres Apple-Passwort funktioniert <em>nicht</em> — du brauchst ein spezielles.<br><br>
+              <a href="https://appleid.apple.com/account/manage" target="_blank" rel="noopener">→ App-spezifisches Passwort erstellen (appleid.apple.com)</a><br>
+              <span style="font-size:11px">Account → Sicherheit → App-spezifische Passwörter → + → Name: "planwith"</span>
+            </div>
+            <div class="apple-form">
+              <input type="email" id="apple-id" placeholder="deine@icloud.com oder Apple ID E-Mail">
+              <input type="password" id="apple-pw" placeholder="App-spezifisches Passwort (xxxx-xxxx-xxxx-xxxx)">
+              <button class="apple-submit" id="apple-submit-btn" onclick="submitAppleCalDAV()">
+                🍎 Zum Apple Kalender hinzufügen
+              </button>
+            </div>
+            <div class="cal-status ok" id="apple-status-ok" style="display:none">✓ Termin wurde in deinen iCloud Kalender eingetragen!</div>
+            <div class="cal-status err" id="apple-status-err" style="display:none"></div>
+          </div>
+        </div>
+
+        <!-- Outlook -->
+        <div class="cal-opt cal-opt-outlook" id="opt-outlook">
+          <div class="cal-opt-header" onclick="toggleOpt('opt-outlook')">
+            <div class="cal-opt-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24"><rect width="24" height="24" rx="3" fill="#0078D4"/><rect x="13" y="5" width="7" height="14" rx="1" fill="rgba(255,255,255,.85)"/><rect x="4" y="7" width="9" height="10" rx="1" fill="white"/></svg>
+            </div>
+            <div class="cal-opt-label">
+              <div class="col-name">Outlook / Microsoft 365</div>
+              <div class="col-sub">Direkt in Outlook Web öffnen</div>
+            </div>
+            <span class="cal-opt-caret">›</span>
+          </div>
+          <div class="cal-opt-body">
+            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px">Öffnet Outlook Web mit dem Termin vorausgefüllt — du musst nur noch speichern.</p>
+            <a class="outlook-btn" id="outlook-btn" href="#" target="_blank" rel="noopener">
+              📅 In Outlook öffnen
+            </a>
+          </div>
+        </div>
+
+        <!-- ICS fallback -->
+        <div class="cal-opt cal-opt-ics" id="opt-ics">
+          <div class="cal-opt-header" onclick="toggleOpt('opt-ics')">
+            <div class="cal-opt-icon">📎</div>
+            <div class="cal-opt-label">
+              <div class="col-name">Andere Kalender-App</div>
+              <div class="col-sub">.ics Datei — Samsung, Thunderbird, etc.</div>
+            </div>
+            <span class="cal-opt-caret">›</span>
+          </div>
+          <div class="cal-opt-body">
+            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px">Universell — funktioniert mit jeder Kalender-App die .ics-Dateien unterstützt.</p>
+            <button class="ics-btn" onclick="downloadICS()">⬇️ .ics Datei herunterladen</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- end cal-section -->
+
+    <button class="btn btn-ghost" style="width:100%" onclick="backToBook()">← Zurück zum Event</button>
+  </div>
+</div>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const K='pw_evs';
+function loadEvs(){try{return JSON.parse(localStorage.getItem(K)||'{}')}catch{return{}}}
+function saveEvs(e){localStorage.setItem(K,JSON.stringify(e))}
+function nameKey(id){return 'pw_name_'+id}
+function getMyName(id){return localStorage.getItem(nameKey(id))||''}
+function setMyName(id,n){localStorage.setItem(nameKey(id),n)}
+
+const WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
+const MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const ACS=['ac0','ac1','ac2','ac3','ac4','ac5','ac6','ac7'];
+function pad(n){return String(n).padStart(2,'0')}
+function toISO(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function isoToD(s){return new Date(s+'T12:00:00')}
+function fmtL(iso){const d=isoToD(iso);return `${WD[d.getDay()]}, ${d.getDate()}. ${MON[d.getMonth()]}`}
+function fmtS(iso){const d=isoToD(iso);return `${d.getDate()}. ${MONS[d.getMonth()]}`}
+function avC(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))%ACS.length;return ACS[Math.abs(h)%ACS.length]}
+function ini(n){return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'}
+function genId(){return Math.random().toString(36).slice(2,9)}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+
+// ── CALENDAR SECTION TOGGLE ──────────────────────────────────
+function toggleOpt(id){
+  const el=document.getElementById(id);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.cal-opt').forEach(o=>o.classList.remove('open'));
+  if(!wasOpen)el.classList.add('open');
+}
+
+// ── BOOKING DATA (kept for calendar export) ──────────────────
+let lastBooking=null;
+
+// ── GOOGLE OAUTH ─────────────────────────────────────────────
+function startGoogleOAuth(){
+  if(!lastBooking){toast('Kein Booking gefunden');return}
+  const {ev,slot,gname}=lastBooking;
+  // Save booking context in sessionStorage so we can restore after redirect
+  sessionStorage.setItem('pw_pending_book',JSON.stringify({evId:bId,slot,gname}));
+  const params=new URLSearchParams({
+    action:'login',
+    iso:   slot.iso,
+    time:  slot.time,
+    title: ev.title,
+    desc:  ev.desc||'',
+    name:  ev.name
+  });
+  window.location.href='/.netlify/functions/google-auth?'+params.toString();
+}
+
+// ── APPLE CALDAV ─────────────────────────────────────────────
+async function submitAppleCalDAV(){
+  if(!lastBooking)return;
+  const appleId=document.getElementById('apple-id').value.trim();
+  const appPw  =document.getElementById('apple-pw').value.trim();
+  const errEl  =document.getElementById('apple-status-err');
+  const okEl   =document.getElementById('apple-status-ok');
+  const btn    =document.getElementById('apple-submit-btn');
+
+  if(!appleId||!appPw){
+    errEl.textContent='Bitte Apple ID und App-Passwort eingeben.';
+    errEl.style.display='flex';return;
+  }
+
+  btn.classList.add('loading');
+  btn.textContent='Wird eingetragen…';
+  errEl.style.display='none';
+  okEl.style.display='none';
+
+  const {ev,slot,gname}=lastBooking;
+  try{
+    const res=await fetch('/.netlify/functions/apple-caldav',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        appleId,appPassword:appPw,
+        iso:slot.iso,time:slot.time,
+        title:ev.title,desc:ev.desc||'',guestName:gname
+      })
+    });
+    const data=await res.json();
+    if(!res.ok||data.error)throw new Error(data.error||'CalDAV Fehler');
+    okEl.style.display='flex';
+    btn.textContent='✓ Eingetragen!';
+    toast('✅ Termin in Apple Kalender gespeichert!');
+  }catch(e){
+    errEl.textContent='Fehler: '+e.message;
+    errEl.style.display='flex';
+    btn.classList.remove('loading');
+    btn.textContent='🍎 Zum Apple Kalender hinzufügen';
+  }
+}
+
+// ── OUTLOOK URL ──────────────────────────────────────────────
+function buildOutlookURL(ev,slot){
+  const start=new Date(`${slot.iso}T${slot.time}:00`);
+  const end  =new Date(start.getTime()+60*60000);
+  const title=encodeURIComponent(`${ev.title} mit ${ev.name}`);
+  const body =encodeURIComponent(`Organisiert via planwith.${ev.desc?' '+ev.desc:''}`);
+  return `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${body}&path=%2Fcalendar%2Faction%2Fcompose`;
+}
+
+// ── ICS DOWNLOAD ─────────────────────────────────────────────
+function downloadICS(){
+  if(!lastBooking)return;
+  const {ev,slot,gname}=lastBooking;
+  const start=new Date(`${slot.iso}T${slot.time}:00`);
+  const end  =new Date(start.getTime()+60*60000);
+  function icsD(d){return`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`}
+  const uid =`pw-${ev.id}-${Date.now()}@planwith`;
+  const now =new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const ics =[
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//planwith//DE','CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,`DTSTAMP:${now}`,
+    `DTSTART;TZID=Europe/Berlin:${icsD(start)}`,
+    `DTEND;TZID=Europe/Berlin:${icsD(end)}`,
+    `SUMMARY:${ev.title} 🫶 mit ${ev.name}`,
+    `DESCRIPTION:Gebucht von ${gname}. Via planwith.${ev.desc?' '+ev.desc:''}`,
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Erinnerung','TRIGGER:-PT60M','END:VALARM',
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  const url =URL.createObjectURL(blob);
+  const a   =document.createElement('a');
+  a.href=url;a.download=`planwith-${ev.title.replace(/[^a-zA-Z0-9]/g,'-')}.ics`;
+  a.click();URL.revokeObjectURL(url);
+  toast('📎 .ics Datei wird heruntergeladen');
+}
+
+function updateCalButtons(){
+  if(!lastBooking)return;
+  const {ev,slot}=lastBooking;
+  document.getElementById('outlook-btn').href=buildOutlookURL(ev,slot);
+}
+
+// ── CREATE CAL ───────────────────────────────────────────────
+let cY,cM,cPicked=[];
+function initCal(){const n=new Date();cY=n.getFullYear();cM=n.getMonth();renderCal()}
+function shiftCal(d){cM+=d;if(cM<0){cM=11;cY--}if(cM>11){cM=0;cY++}renderCal()}
+function renderCal(){
+  document.getElementById('c-cal-lbl').textContent=`${MON[cM]} ${cY}`;
+  const n=new Date();n.setHours(0,0,0,0);
+  document.getElementById('c-prev').disabled=(cY<n.getFullYear()||(cY===n.getFullYear()&&cM<=n.getMonth()));
+  const g=document.getElementById('c-cg');g.innerHTML='';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d=>{const h=document.createElement('div');h.className='cg-h';h.textContent=d;g.appendChild(h)});
+  const f=new Date(cY,cM,1);let dow=f.getDay()-1;if(dow<0)dow=6;
+  for(let i=0;i<dow;i++){const e=document.createElement('div');e.className='cc empty';g.appendChild(e)}
+  const dim=new Date(cY,cM+1,0).getDate();
+  for(let d=1;d<=dim;d++){
+    const dt=new Date(cY,cM,d),iso=toISO(dt),past=dt<n,isToday=dt.getTime()===n.getTime();
+    const po=cPicked.find(p=>p.iso===iso);
+    const el=document.createElement('div');
+    el.className='cc'+(past?' past':po?' picked':'')+(isToday?' today':'');
+    el.textContent=d;if(!past)el.onclick=()=>toggleDay(iso);g.appendChild(el);
+  }
+  renderDaysConfig();
+}
+function toggleDay(iso){
+  const idx=cPicked.findIndex(p=>p.iso===iso);
+  if(idx===-1)cPicked.push({iso,times:['10:00','14:00','18:00']});
+  else cPicked.splice(idx,1);
+  cPicked.sort((a,b)=>a.iso.localeCompare(b.iso));renderCal();
+}
+function renderDaysConfig(){
+  const wrap=document.getElementById('c-days-config');wrap.innerHTML='';
+  if(cPicked.length===0)return;
+  const title=document.createElement('div');
+  title.style.cssText='font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px';
+  title.textContent='⏰ Uhrzeiten pro Tag';wrap.appendChild(title);
+  cPicked.forEach(p=>{
+    const d=isoToD(p.iso);
+    const block=document.createElement('div');
+    block.style.cssText='background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px';
+    block.innerHTML=`<div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:8px">${WD[d.getDay()]}, ${fmtS(p.iso)}</div>`;
+    const chips=document.createElement('div');chips.className='slot-times';
+    p.times.forEach(t=>{
+      const c=document.createElement('div');c.className='slot-time-chip';
+      c.innerHTML=`<span>${t} Uhr</span><button onclick="removeTime('${p.iso}','${t}')">×</button>`;
+      chips.appendChild(c);
+    });
+    block.appendChild(chips);
+    const ar=document.createElement('div');ar.className='add-time-row';
+    const inp=document.createElement('input');inp.type='time';inp.value='12:00';
+    const btn=document.createElement('button');btn.className='btn btn-ghost btn-sm';btn.textContent='+ Zeit';
+    btn.onclick=()=>{const t=inp.value;if(t&&!p.times.includes(t)){p.times.push(t);p.times.sort();renderDaysConfig()}};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')btn.click()});
+    ar.appendChild(inp);ar.appendChild(btn);block.appendChild(ar);wrap.appendChild(block);
+  });
+}
+function removeTime(iso,t){const p=cPicked.find(p=>p.iso===iso);if(p){p.times=p.times.filter(x=>x!==t);renderDaysConfig()}}
+
+function createEvent(){
+  const name=document.getElementById('c-name').value.trim();
+  const emoji=document.getElementById('c-emoji').value.trim()||'🙂';
+  const title=document.getElementById('c-title').value.trim();
+  const desc=document.getElementById('c-desc').value.trim();
+  const err=document.getElementById('c-err');
+  const acts=[document.getElementById('h-food').value,document.getElementById('h-sport').value,document.getElementById('h-trip').value].filter(Boolean);
+  const hasSlots=cPicked.some(p=>p.times.length>0);
+  if(!name||!title||!hasSlots){err.style.display='block';return}
+  err.style.display='none';
+  const id=genId();const evs=loadEvs();
+  evs[id]={id,name,emoji,title,desc,acts,
+    slots:cPicked.flatMap(p=>p.times.map(t=>({iso:p.iso,time:t,bookedBy:null,msg:''}))),
+    actVotes:{},created:Date.now()
+  };
+  acts.forEach(a=>evs[id].actVotes[a]=[]);
+  saveEvs(evs);setMyName(id,name);
+  window.location.hash='book-'+id;
+}
+
+// ── BOOK ─────────────────────────────────────────────────────
+let bId=null,bSelSlot=null,bActVotes=[];
+function loadBook(id){
+  const evs=loadEvs();const ev=evs[id];
+  if(!ev){window.location.hash='';return}
+  bId=id;bSelSlot=null;bActVotes=[];
+  document.getElementById('b-av').textContent=ev.emoji;
+  document.getElementById('b-hname').textContent=`${ev.name} lädt ein · ${ev.title}`;
+  document.getElementById('b-desc').textContent=ev.desc||'';
+  document.getElementById('b-share-url').value=window.location.origin+window.location.pathname+'#book-'+id;
+  document.getElementById('bar-right').textContent='Link teilen';
+  document.getElementById('bar-right').onclick=copyLink;
+  bStep(1);renderSlots();renderDashboard();renderActVoteDash();
+  showView('view-book');
+}
+function bStep(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('b-step'+i).style.display=i===n?'block':'none';
+    const si=document.getElementById('si'+i);
+    si.classList.remove('on','done');
+    if(i<n){si.classList.add('done');si.querySelector('.step-dot').textContent='✓'}
+    else if(i===n){si.classList.add('on');si.querySelector('.step-dot').textContent=i}
+    else si.querySelector('.step-dot').textContent=i;
+    if(i<3)document.getElementById('sl'+i).classList.toggle('done',i<n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderSlots(){
+  const ev=loadEvs()[bId];if(!ev)return;
+  const byDate={};ev.slots.forEach(s=>{if(!byDate[s.iso])byDate[s.iso]=[];byDate[s.iso].push(s)});
+  const dates=Object.keys(byDate).sort();
+  const tabs=document.getElementById('b-day-tabs');tabs.innerHTML='';
+  dates.forEach((iso,i)=>{
+    const d=isoToD(iso);const tb=document.createElement('div');
+    tb.className='dtab'+(i===0?' on':'');tb.dataset.iso=iso;
+    tb.innerHTML=`<div class="dt-wd">${WD[d.getDay()]}</div><div class="dt-day">${d.getDate()}</div><div class="dt-mon">${MONS[d.getMonth()]}</div>`;
+    tb.onclick=()=>{document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));tb.classList.add('on');renderTimesForDay(iso,byDate[iso])};
+    tabs.appendChild(tb);
+  });
+  if(dates.length>0)renderTimesForDay(dates[0],byDate[dates[0]]);
+}
+function renderTimesForDay(iso,slots){
+  const grid=document.getElementById('b-time-grid');grid.innerHTML='';
+  if(!slots||!slots.length){grid.innerHTML='<div class="no-slots" style="grid-column:1/-1">Keine Slots.</div>';return}
+  slots.forEach(s=>{
+    const btn=document.createElement('button');
+    btn.className='tslot'+(s.bookedBy?' taken':'')+(bSelSlot&&bSelSlot.iso===iso&&bSelSlot.time===s.time?' sel':'');
+    btn.textContent=s.time+' Uhr';btn.disabled=!!s.bookedBy;
+    if(!s.bookedBy)btn.onclick=()=>selectSlot(iso,s.time);
+    grid.appendChild(btn);
+  });
+}
+function selectSlot(iso,time){
+  bSelSlot={iso,time};
+  document.querySelectorAll('.tslot').forEach(b=>b.classList.toggle('sel',b.textContent===time+' Uhr'));
+  setTimeout(()=>{
+    if(!bSelSlot)return;
+    const ev=loadEvs()[bId];if(!ev)return;
+    buildActVoteStep(ev);
+    if(ev.acts&&ev.acts.length>0)bStep(2);
+    else{updateRecap();bStep(3);}
+  },300);
+}
+function buildActVoteStep(ev){
+  const grid=document.getElementById('b-act-grid');grid.innerHTML='';
+  if(!ev.acts||!ev.acts.length)return;
+  const allVotes=ev.actVotes||{};
+  const maxV=Math.max(...Object.values(allVotes).map(v=>v.length),1);
+  ev.acts.forEach(act=>{
+    const votes=allVotes[act]||[];
+    const pct=Math.round(votes.length/maxV*100)||0;
+    const isVoted=bActVotes.includes(act);
+    const opt=document.createElement('div');
+    opt.className='av-opt'+(isVoted?' voted':'');
+    opt.innerHTML=`<div class="av-opt-icon">${act.slice(0,2)}</div><div class="av-opt-label">${act.slice(2).trim()}</div><div class="av-opt-bar-wrap"><div class="av-opt-bar-track"><div class="av-opt-bar-fill" style="width:${pct}%"></div></div><div class="av-opt-count">${votes.length} Stimme${votes.length!==1?'n':''}</div></div><div class="av-chk">${isVoted?'✓':''}</div>`;
+    opt.onclick=()=>{const idx=bActVotes.indexOf(act);if(idx===-1)bActVotes.push(act);else bActVotes.splice(idx,1);buildActVoteStep(ev)};
+    grid.appendChild(opt);
+  });
+  if(bSelSlot)document.getElementById('v-slot-recap').textContent=`${fmtL(bSelSlot.iso)}, ${bSelSlot.time} Uhr`;
+  const ex=document.getElementById('act-next-btn');if(ex)ex.remove();
+  const nb=document.createElement('button');nb.id='act-next-btn';nb.className='btn btn-ink';nb.style.marginTop='4px';
+  nb.textContent='Weiter →';nb.onclick=()=>{updateRecap();bStep(3)};
+  document.getElementById('b-step2').querySelector('.card').appendChild(nb);
+}
+function updateRecap(){
+  if(!bSelSlot)return;
+  document.getElementById('rc-date').textContent=fmtL(bSelSlot.iso);
+  document.getElementById('rc-time').textContent=bSelSlot.time+' Uhr';
+  const chipWrap=document.getElementById('rc-act-chips');const prev=document.getElementById('rc-act-preview');
+  chipWrap.innerHTML='';
+  if(bActVotes.length>0){
+    prev.style.display='block';
+    bActVotes.forEach(a=>{const c=document.createElement('div');c.className='ach ach-sport';c.textContent=a;chipWrap.appendChild(c)});
+  }else prev.style.display='none';
+}
+function confirmBook(){
+  const gname=document.getElementById('b-gname').value.trim();
+  const gmsg =document.getElementById('b-gmsg').value.trim();
+  const err  =document.getElementById('b-err');
+  if(!gname){err.style.display='block';return}
+  err.style.display='none';if(!bSelSlot)return;
+  const evs=loadEvs();const ev=evs[bId];
+  const slot=ev.slots.find(s=>s.iso===bSelSlot.iso&&s.time===bSelSlot.time&&!s.bookedBy);
+  if(!slot){toast('Slot gerade vergeben 😅');renderSlots();bStep(1);return}
+  slot.bookedBy=gname;slot.msg=gmsg;
+  bActVotes.forEach(act=>{
+    if(!ev.actVotes[act])ev.actVotes[act]=[];
+    if(!ev.actVotes[act].includes(gname))ev.actVotes[act].push(gname);
+  });
+  saveEvs(evs);setMyName(bId,gname);
+
+  // Store for calendar export
+  lastBooking={ev:JSON.parse(JSON.stringify(ev)),slot:{...bSelSlot},gname};
+  updateCalButtons();
+
+  // Build success summary
+  const sum=document.getElementById('s-summary');
+  const winAct=Object.entries(ev.actVotes).sort((a,b)=>b[1].length-a[1].length)[0];
+  sum.innerHTML=`
+    <div class="s-row"><span class="s-icon">👤</span><span class="s-key">Host</span><span class="s-val">${ev.emoji} ${ev.name}</span></div>
+    <div class="s-row"><span class="s-icon">📅</span><span class="s-key">Datum</span><span class="s-val">${fmtL(bSelSlot.iso)}</span></div>
+    <div class="s-row"><span class="s-icon">⏰</span><span class="s-key">Uhrzeit</span><span class="s-val">${bSelSlot.time} Uhr</span></div>
+    <div class="s-row"><span class="s-icon">🙋</span><span class="s-key">Du</span><span class="s-val">${gname}</span></div>
+    ${bActVotes.length?`<div class="s-row"><span class="s-icon">🎯</span><span class="s-key">Dein Vote</span><span class="s-val">${bActVotes.join(' · ')}</span></div>`:''}
+    ${winAct&&winAct[1].length>0?`<div class="s-row"><span class="s-icon">🏆</span><span class="s-key">Führt</span><span class="s-val">${winAct[0]} (${winAct[1].length} Stimmen)</span></div>`:''}
+    ${gmsg?`<div class="s-row"><span class="s-icon">💬</span><span class="s-key">Nachricht</span><span class="s-val">${gmsg}</span></div>`:''}
+  `;
+  bSelSlot=null;bActVotes=[];
+  // Reset calendar status badges
+  ['google-status-ok','google-status-err','apple-status-ok','apple-status-err'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  document.querySelectorAll('.cal-opt').forEach(o=>o.classList.remove('open'));
+  showView('view-success');
+}
+function backToBook(){loadBook(bId)}
+function renderDashboard(){
+  const ev=loadEvs()[bId];if(!ev)return;
+  const booked=ev.slots.filter(s=>s.bookedBy);
+  const list=document.getElementById('b-dash-list');list.innerHTML='';
+  if(!booked.length){list.innerHTML='<div class="empty-dash"><span class="e">📭</span>Noch niemand gebucht — Link teilen!</div>';return}
+  booked.sort((a,b)=>a.iso.localeCompare(b.iso)||(a.time>b.time?1:-1)).forEach(s=>{
+    const row=document.createElement('div');row.className='booking-item';
+    row.innerHTML=`<div class="bi-av ${avC(s.bookedBy)}">${ini(s.bookedBy)}</div><div class="bi-info"><div class="bi-name">${s.bookedBy}</div><div class="bi-slot">${fmtS(s.iso)}, ${s.time} Uhr${s.msg?' · '+s.msg:''}</div></div><div class="bi-badge">gebucht ✓</div>`;
+    list.appendChild(row);
+  });
+}
+function renderActVoteDash(){
+  const ev=loadEvs()[bId];if(!ev)return;
+  const wrap=document.getElementById('b-actvote-dash');const res=document.getElementById('b-actvote-results');
+  if(!ev.acts||!ev.acts.length){wrap.style.display='none';return}
+  wrap.style.display='block';res.innerHTML='';
+  const votes=ev.actVotes||{};const maxV=Math.max(...Object.values(votes).map(v=>v.length),1);
+  ev.acts.forEach(act=>{
+    const v=votes[act]||[];const pct=Math.round(v.length/maxV*100)||0;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)';
+    row.innerHTML=`<span style="font-size:16px">${act.slice(0,2)}</span><span style="flex:1;font-size:13px;font-weight:500">${act.slice(2).trim()}</span><div style="width:80px"><div style="height:4px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:3px"><div style="height:100%;background:var(--lime);border-radius:999px;width:${pct}%;transition:width .4s"></div></div><div style="font-size:10px;color:var(--muted);text-align:right">${v.length} Stimme${v.length!==1?'n':''}</div></div>`;
+    res.appendChild(row);
+  });
+  if(res.lastChild)res.lastChild.style.borderBottom='none';
+}
+function copyLink(){
+  const url=document.getElementById('b-share-url').value;
+  navigator.clipboard.writeText(url).catch(()=>{});toast('Link kopiert! 📋');
+}
+function goCreate(){if(confirm('Neues Event erstellen?'))window.location.hash=''}
+
+// ── ROUTER ───────────────────────────────────────────────────
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Handle Google OAuth return
+function checkOAuthReturn(){
+  const hash=window.location.hash;
+  if(hash==='#cal-success-google'){
+    // Restore booking and show success
+    const pending=sessionStorage.getItem('pw_pending_book');
+    if(pending){
+      const {evId,slot,gname}=JSON.parse(pending);
+      sessionStorage.removeItem('pw_pending_book');
+      bId=evId;
+      const ev=loadEvs()[evId];
+      if(ev){
+        lastBooking={ev:JSON.parse(JSON.stringify(ev)),slot,gname};
+        // Build summary
+        const sum=document.getElementById('s-summary');
+        sum.innerHTML=`<div class="s-row"><span class="s-icon">📅</span><span class="s-key">Datum</span><span class="s-val">${fmtL(slot.iso)}</span></div><div class="s-row"><span class="s-icon">⏰</span><span class="s-key">Uhrzeit</span><span class="s-val">${slot.time} Uhr</span></div><div class="s-row"><span class="s-icon">🙋</span><span class="s-key">Du</span><span class="s-val">${gname}</span></div>`;
+        updateCalButtons();
+        // Show Google success
+        document.getElementById('opt-google').classList.add('open');
+        document.getElementById('google-status-ok').style.display='flex';
+        showView('view-success');
+        return true;
+      }
+    }
+  }
+  if(hash.startsWith('#cal-error')){
+    showView('view-success');
+    document.getElementById('opt-google').classList.add('open');
+    const msg=new URLSearchParams(hash.split('?')[1]||'').get('msg')||'Unbekannter Fehler';
+    const errEl=document.getElementById('google-status-err');
+    errEl.textContent='Fehler: '+msg;errEl.style.display='flex';
+    return true;
+  }
+  return false;
+}
+
+function route(){
+  const h=window.location.hash.slice(1);
+  document.getElementById('bar-right').textContent='';
+  document.getElementById('bar-right').onclick=null;
+  if(checkOAuthReturn())return;
+  if(h.startsWith('book-'))loadBook(h.slice(5));
+  else{showView('view-create');initCal()}
+}
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
